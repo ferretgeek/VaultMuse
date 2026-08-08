@@ -99,7 +99,7 @@ function profile(overrides = {}) {
     name: "测试",
     kind: "openai-chat",
     baseUrl: "https://api.openai.com/v1",
-    apiKey: "sk-test",
+    apiKey: "sk-test", // pragma: allowlist secret — synthetic fixture
     rememberSensitiveFields: false,
     model: "gpt-test",
     reasoningEffort: "default",
@@ -693,6 +693,7 @@ test("provider validation requires HTTPS except on loopback", () => {
     /HTTP/,
   );
   assert.throws(
+    // pragma: allowlist nextline secret — reserved synthetic URL credential
     () =>
       validateProfile(
         profile({ baseUrl: ["https://user", "pass@api.example.com/v1"].join(":") }),

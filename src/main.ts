@@ -232,7 +232,7 @@ export default class AiChatPlugin extends Plugin {
       name: typeof raw.name === "string" ? raw.name : "",
       kind,
       baseUrl: typeof raw.baseUrl === "string" ? raw.baseUrl : "",
-      apiKey: typeof raw.apiKey === "string" ? raw.apiKey : "",
+      apiKey: typeof raw.apiKey === "string" ? raw.apiKey : "", // pragma: allowlist secret
       rememberSensitiveFields: raw.rememberSensitiveFields === true,
       model: typeof raw.model === "string" ? raw.model : "",
       reasoningEffort: normalizeReasoningEffort(raw.reasoningEffort),
