@@ -1,0 +1,35 @@
+name: Bug report
+description: Report a reproducible problem using synthetic notes only
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Never include API keys, custom headers, private endpoints, real notes, vault paths, provider responses, or private screenshots.
+  - type: input
+    id: version
+    attributes:
+      label: VaultMuse and Obsidian versions
+      placeholder: VaultMuse 1.0.0 / Obsidian 1.8.7
+    validations:
+      required: true
+  - type: dropdown
+    id: protocol
+    attributes:
+      label: Provider protocol
+      options: [OpenAI Responses, OpenAI-compatible Chat Completions, Anthropic Messages, UI or local-only behavior]
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproduction
+      placeholder: Use example.invalid, placeholder tokens, and synthetic notes.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true

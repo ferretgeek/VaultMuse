@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+
+# Generated release bundle (attached to GitHub Releases, not committed)
+main.js
+dist/
+coverage/
+
+# Obsidian runtime plugin data (settings + chat history + session ids)
+data.json
+data.json.*
+
+# Internal planning / scratch notes (not part of the public plugin)
+notes.md
+task_plan.md
+implementation_report.md
+
+# Build / editor junk
+main.js.map
+*.js.map
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/
+*.tsbuildinfo
+
+# Local env / secrets (if ever added)
+.env
+.env.*
+*.pem
+*.key
+
+# Local debug / visual harness (do not ship)
+cdp-*.mjs
+mock-*.mjs
+preview-harness.html
+obsidian-*.png
+_*.py
+_*.txt
+
+# Local release and audit outputs
+release-assets/
+.audit/

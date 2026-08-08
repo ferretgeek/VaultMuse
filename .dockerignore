@@ -1,0 +1,6 @@
+*
+!Dockerfile
+!demo/
+!demo/**
+!deploy/
+!deploy/nginx.conf
