@@ -9,7 +9,7 @@
 [![MIT](https://img.shields.io/badge/license-MIT-3f8268.svg)](./LICENSE)
 [![Obsidian](https://img.shields.io/badge/Obsidian-1.8.7%2B-7c5ce7.svg)](https://obsidian.md/)
 
-[English](./README_EN.md) · [隐私边界](./docs/PRIVACY.md) · [安装与部署](./docs/DEPLOYMENT.md) · [交互演示](./demo/)
+[English](./README_EN.md) · [隐私边界](./docs/PRIVACY.md) · [安装与部署](./docs/DEPLOYMENT.md) · [在线演示](https://ferretgeek.github.io/VaultMuse/)
 
 </div>
 
