@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="sky">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="VaultMuse — 在笔记与灵感之间，让 AI 成为克制、透明的同行者。" />
+    <meta name="color-scheme" content="light dark" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" />
+    <title>VaultMuse · 卷语</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="./favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="VaultMuse 首页">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 40 40"><path d="M11 8h15a5 5 0 0 1 5 5v17H16a7 7 0 0 1-7-7V10a2 2 0 0 1 2-2Z"/><path d="M15 13v13m0-7c5-5 9-5 12 0-3 5-7 5-12 0Z"/></svg>
+          </span>
+          <span><b>VaultMuse</b><small>卷语</small></span>
+        </a>
+        <div class="top-actions">
+          <span class="privacy-pill"><i></i> 本地优先</span>
+          <button class="icon-button" id="infoButton" aria-label="查看隐私说明" title="隐私说明">
+            <svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.6 2.8 8.8 7 10 4.2-1.2 7-5.4 7-10V6l-7-3Z"/><path d="m9.4 12 1.7 1.7 3.8-4"/></svg>
+          </button>
+          <div class="theme-wrap">
+            <button class="theme-button" id="themeButton" aria-haspopup="true" aria-expanded="false">
+              <span class="theme-dot"></span><span class="theme-label">天青</span>
+              <svg viewBox="0 0 20 20"><path d="m6 8 4 4 4-4"/></svg>
+            </button>
+            <div class="theme-menu" id="themeMenu" role="menu" hidden>
+              <button data-theme="sky"><span class="swatch sky"></span><span><b>天青</b><small>清透雾蓝</small></span></button>
+              <button data-theme="jade"><span class="swatch jade"></span><span><b>翡翠</b><small>柔和青绿</small></span></button>
+              <button data-theme="sunset"><span class="swatch sunset"></span><span><b>晚霞</b><small>温暖杏粉</small></span></button>
+              <button data-theme="graphite"><span class="swatch graphite"></span><span><b>深灰</b><small>#17191d</small></span></button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="note-rail">
+          <div class="rail-heading"><span>今日笔记</span><button aria-label="新建笔记">＋</button></div>
+          <nav aria-label="示例笔记">
+            <button class="note-link active"><span class="note-icon">春</span><span><b>花园与春天</b><small>刚刚 · 1,286 字</small></span></button>
+            <button class="note-link"><span class="note-icon violet">光</span><span><b>灵感碎片</b><small>今天 · 7 条</small></span></button>
+            <button class="note-link"><span class="note-icon amber">读</span><span><b>阅读札记</b><small>昨天 · 3,102 字</small></span></button>
+          </nav>
+          <div class="rail-quote">“写作，是把散落的星光<br />慢慢放回自己的夜空。”</div>
+        </aside>
+
+        <section class="note-canvas">
+          <div class="note-meta"><span>随笔</span><span>2026 年 8 月 9 日</span></div>
+          <h1>花园与春天</h1>
+          <p class="lead">雨停之后，叶尖仍悬着一点光。那些没能说出口的念头，似乎也有了安静生长的地方。</p>
+          <h2>一种缓慢的秩序</h2>
+          <p>我想把这段观察写成一篇更完整的短文：保留克制的语气，让季节与人的心绪自然地靠近，而不是急着给出答案。</p>
+          <blockquote>真正长久的改变，往往没有声响。</blockquote>
+          <p>或许可以从清晨的细节开始，再回到“等待”这件事本身。</p>
+          <div class="note-tags"><span>#写作</span><span>#观察</span><span>#春天</span></div>
+        </section>
+
+        <section class="chat-panel" aria-label="AI 对话演示">
+          <div class="chat-head">
+            <div><small>与笔记并肩思考</small><h2>卷语</h2></div>
+            <div class="chat-actions"><button title="对话历史" aria-label="对话历史">⌕</button><button title="新对话" aria-label="新对话">＋</button></div>
+          </div>
+          <div class="context-line"><span class="pulse"></span>已带入当前笔记 <b>花园与春天</b><button id="contextButton">查看</button></div>
+          <div class="messages" id="messages" aria-live="polite">
+            <article class="message user"><p>帮我梳理这篇随笔的结构，让它更有呼吸感，但不要改变原来的气质。</p></article>
+            <article class="message assistant">
+              <div class="muse-avatar">卷</div>
+              <div><p>可以把它看作三次很轻的呼吸：</p><ol><li><b>看见</b>——雨后的叶尖，先让读者停下来。</li><li><b>靠近</b>——从花园转向那些未说出口的念头。</li><li><b>留白</b>——回到“等待”，不替感受下结论。</li></ol><p>我为你整理了一版提纲，原文不会被直接改动。</p><button class="proposal" id="proposalButton"><span>⌘</span> 预览修改提案 <small>3 处调整</small></button></div>
+            </article>
+          </div>
+          <div class="composer-wrap">
+            <div class="chips"><button>当前笔记 ×</button><button>#写作 ×</button><button id="addContext">＋ 上下文</button></div>
+            <div class="composer"><textarea id="composer" rows="2" placeholder="写下问题，或输入 / 选择工作流…"></textarea><button id="sendButton" aria-label="发送"><svg viewBox="0 0 24 24"><path d="m5 12 14-7-4 14-3-5-7-2Z"/><path d="m12 14 7-9"/></svg></button></div>
+            <div class="composer-meta"><span>OpenAI Responses · 中等推理</span><span>Enter 发送</span></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="modal">
+      <button class="modal-close" id="modalClose" aria-label="关闭">×</button>
+      <div id="modalContent"></div>
+    </dialog>
+    <template id="privacyTemplate">
+      <h3>边界清楚，才有安心的自由</h3>
+      <p>演示页不联网、不上传，也不接触真实笔记。插件只把你主动选择的上下文发往自己配置的接口；API Key 默认仅保存在当前会话内存。</p>
+      <p>任何写回都先形成可读的修改提案，由你确认后才会发生。</p>
+    </template>
+    <template id="proposalTemplate">
+      <h3>修改提案 · 花园与春天</h3>
+      <p>这只是可审阅的示意。真实插件会逐文件展示差异，并允许拒绝。</p>
+      <div class="diff"><div class="minus">− 我想把这段观察写成一篇更完整的短文。</div><div class="plus">+ 我想让这段观察，慢慢长成一篇完整的短文。</div><div class="plus">+ 不追赶答案，只保留雨停后的那一点光。</div></div>
+    </template>
+    <template id="contextTemplate">
+      <h3>本轮上下文</h3><p><b>当前笔记：</b>花园与春天<br /><b>标签：</b>#写作<br /><b>外部文件：</b>无</p><p>上下文逐项可见、可移除；不会扫描整个 Vault。</p>
+    </template>
+    <script src="./app.js"></script>
+  </body>
+</html>
