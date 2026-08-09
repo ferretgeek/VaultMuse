@@ -33,3 +33,18 @@ npm run build
 ```
 
 没有这个变量时，构建绝不会复制到 Vault。变量必须是绝对路径且父目录已存在。
+
+## 升级、备份与恢复
+
+升级前退出 Obsidian，并用你现有的 Vault 备份工具创建一致快照。保留 `data.json`，只替换同一版本的 `main.js`、`manifest.json`、`styles.css`，再启动 Obsidian 核对插件版本、模型配置和一段合成对话。回滚时退出 Obsidian，恢复上一组构建文件；若新版本改变了数据结构，应连同升级前的 `data.json` 一起恢复。
+
+插件设置与对话位于 `<Vault>/.obsidian/plugins/vault-muse/data.json`，截图附件和已确认写入的笔记位于 Vault 自身。若开启“保存 API Key”，`data.json` 会包含明文秘密，备份必须加密且不得公开或同步到不可信位置。恢复整个 Vault 前先在副本中验证，避免覆盖更新的笔记。
+
+## 健康检查、排错与卸载
+
+- 插件健康：Obsidian 能启用插件、打开对话视图、加载模型配置，并在未确认时不写入笔记；`npm run check` 是源码门禁，不替代实际 Obsidian 检查。
+- 模型请求失败：核对 HTTPS/本机回环端点、模型名、Provider 协议和当前会话 Key；公开诊断前删除提示词、笔记内容、Headers 和错误中的部署标识。
+- 写入提案失败：确认目标是 Vault 内允许的相对路径，且不是 `.obsidian`、`.trash` 或越界路径。
+- 演示页健康：静态首页和图标返回成功即可；它没有 API、模型请求、插件状态或用户数据，不能用于验证真实插件功能。
+- 卸载：先在 Obsidian 禁用插件并退出，再删除 `.obsidian/plugins/vault-muse/`。这会删除 `data.json` 中的对话/设置，但不会回滚已确认写入的笔记或自动删除 Vault 附件；按备份决定另行处理。
+- 服务器只需停止并删除合成演示页/容器。不存在可部署的 VaultMuse 服务端、同步端或 AI 中继；把演示页上线不等于服务器版产品。
