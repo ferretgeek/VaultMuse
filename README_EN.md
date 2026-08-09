@@ -1,6 +1,6 @@
 <div align="center">
 
-# VaultMuse
+# VaultMuse / 卷语 — Obsidian AI Chat & Writing
 
 **A quiet, transparent AI companion between your notes and your next thought.**
 

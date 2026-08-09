@@ -1,6 +1,6 @@
 <div align="center">
 
-# VaultMuse · 卷语
+# 卷语 / VaultMuse — Obsidian AI 对话与写作
 
 **在笔记与灵感之间，让 AI 成为克制、透明的同行者。**
 
