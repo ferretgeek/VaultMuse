@@ -1,7 +1,7 @@
 {
   "id": "vault-muse",
   "name": "VaultMuse",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "minAppVersion": "1.8.7",
   "description": "A privacy-minded AI workspace with explicit vault context, prompt caching, and guarded note editing.",
   "author": "ferretgeek",

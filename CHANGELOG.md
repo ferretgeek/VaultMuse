@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1 — 2026-08-09
+
+- Reissued the public history after an adversarial scan found a deliberately invalid credential-bearing URL in a rejection test; no real credential was present.
+- Retired the immutable `1.0.0` tag and moved the supported release to `1.0.1`, eliminating the scanner-shaped fixture from every reachable commit and tag.
+- Includes the release-packaging race fix, security hardening, provider safeguards, UI polish, and updated release assets from the final audit.
+
 ## 1.0.0 — 2026-08-09
 
 - Rebuilt the plugin as VaultMuse with explicit context, guarded note editing, recoverable deletion, and independent provider profiles.
