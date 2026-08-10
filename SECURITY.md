@@ -14,6 +14,8 @@ Include the affected version, Obsidian version, provider protocol, a minimal rep
 
 - Keep sensitive profile fields memory-only unless local plaintext persistence is explicitly accepted.
 - Use HTTPS for remote endpoints; loopback HTTP is allowed for local models.
+- Model output cannot auto-load remote Markdown resources; external URLs require an explicit click.
+- Provider-controlled error bodies are never persisted verbatim and are reduced to safe summaries.
 - Review every context item and diff before sending or applying it.
 - Keep Obsidian, Node/Electron, the plugin, and provider SDK-compatible endpoints patched.
 - Treat `data.json`, exported chats, screenshots, prompts, and model responses as private.

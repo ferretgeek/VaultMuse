@@ -31,6 +31,7 @@ await build({
     path.join(root, "src/providers/anthropic.ts"),
     path.join(root, "src/providers/types.ts"),
     path.join(root, "src/providers/index.ts"),
+    path.join(root, "src/safeMarkdown.ts"),
   ],
   outdir: outDir,
   format: "esm",
@@ -88,8 +89,10 @@ const {
   normalizeReasoningEffort,
   profileForPersistence,
   sanitizeProviderErrorText,
+  ProviderError,
 } = await load("providers/types.js");
 const { buildHeaders, validateProfile } = await load("providers/index.js");
+const { protectRemoteMarkdownUrls } = await load("safeMarkdown.js");
 
 // ── helpers ──────────────────────────────────────────────────────────────
 
@@ -715,12 +718,30 @@ test("sensitive profile fields are memory-only unless explicitly remembered", ()
   assert.equal(remembered.extraHeaders, "X-Relay: value");
 });
 
-test("provider errors redact common credential forms", () => {
-  const synthetic = ["Bear", "er token-value-123456", " ", "sk-", "example123456789"].join("");
+test("provider errors reduce arbitrary upstream content to an allowlisted summary", () => {
+  const synthetic = ["Bear", "er token-value-123456", " private prompt ", "sk-", "example123456789"].join("");
   const safe = sanitizeProviderErrorText(synthetic);
-  assert.doesNotMatch(safe, /token-value/);
-  assert.doesNotMatch(safe, /example123/);
-  assert.match(safe, /redacted/);
+  assert.equal(safe, "上游请求失败（详细信息已隐藏）");
+  const error = new ProviderError(synthetic, 500, synthetic);
+  assert.equal(error.message, "HTTP 500 · 服务端错误，可稍后重试");
+  assert.equal(error.detail, "上游错误详情已隐藏，以避免保存敏感内容");
+  assert.doesNotMatch(`${error.message} ${error.detail}`, /token-value|private prompt|example123/);
+});
+
+test("assistant Markdown removes remote URLs before rendering", () => {
+  const result = protectRemoteMarkdownUrls(
+    "![private](https://images.example.invalid/a.png) [docs](http://example.invalid/help) <iframe src=\"https://example.invalid/embed\">",
+  );
+  assert.doesNotMatch(result.markdown, /https?:\/\//i);
+  assert.equal(result.remoteUrls.length, 3);
+  assert.deepEqual(
+    result.remoteUrls.map(({ url }) => url),
+    [
+      "https://images.example.invalid/a.png",
+      "http://example.invalid/help",
+      "https://example.invalid/embed",
+    ],
+  );
 });
 
 // ── prompt builder ───────────────────────────────────────────────────────

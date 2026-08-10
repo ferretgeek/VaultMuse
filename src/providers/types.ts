@@ -166,23 +166,53 @@ export class ProviderError extends Error {
   detail?: string;
 
   constructor(message: string, status?: number, detail?: string) {
-    super(message);
+    super(sanitizeProviderErrorText(message, 400, status));
     this.name = "ProviderError";
     this.status = status;
-    this.detail = detail;
+    this.detail = detail?.trim() ? "上游错误详情已隐藏，以避免保存敏感内容" : undefined;
   }
 }
 
-/** Remove common credential shapes before an upstream error reaches UI or history. */
-export function sanitizeProviderErrorText(value: string, maxLength = 400): string {
-  return value
-    .slice(0, Math.max(0, maxLength))
-    .replace(/\bBearer\s+[A-Za-z0-9._~+/=-]{8,}/gi, "Bearer [redacted]")
-    .replace(/\bsk-[A-Za-z0-9_-]{8,}/g, "sk-[redacted]")
-    .replace(
-      /("?(?:api[_-]?key|authorization|x-api-key)"?\s*[:=]\s*"?)[^"\s,}]{6,}/gi,
-      "$1[redacted]",
-    );
+const SAFE_PROVIDER_MESSAGES = new Set([
+  "aborted",
+  "未填写 Base URL",
+  "未填写模型 ID",
+  "接口地址无效",
+  "接口地址只允许 HTTP 或 HTTPS",
+  "接口地址不能包含用户名或密码",
+  "远程接口必须使用 HTTPS；HTTP 仅允许本机回环地址",
+]);
+
+/**
+ * Convert any provider-controlled text into an allowlisted, persistence-safe
+ * summary. Upstreams may echo prompts, credentials, URLs, or control bytes in
+ * structured and streaming errors, so pattern-only redaction is insufficient.
+ */
+export function sanitizeProviderErrorText(
+  value: string,
+  maxLength = 400,
+  status?: number,
+): string {
+  const normalized = Array.from(value, (character) => {
+    const codePoint = character.codePointAt(0) ?? 0;
+    return codePoint <= 31 || (codePoint >= 127 && codePoint <= 159) ? " " : character;
+  })
+    .join("")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (SAFE_PROVIDER_MESSAGES.has(normalized)) {
+    return normalized.slice(0, Math.max(0, maxLength));
+  }
+
+  const parsedStatus = status ?? Number(/^HTTP\s+([1-5]\d{2})\b/i.exec(normalized)?.[1]);
+  if (Number.isInteger(parsedStatus) && parsedStatus >= 100 && parsedStatus <= 599) {
+    const hint = statusHint(parsedStatus);
+    return [`HTTP ${parsedStatus}`, hint].filter(Boolean).join(" · ");
+  }
+  if (/^网络请求失败/u.test(normalized)) {
+    return "网络请求失败（详细信息已隐藏）";
+  }
+  return normalized ? "上游请求失败（详细信息已隐藏）" : "上游请求失败";
 }
 
 /** Produce the profile shape that is safe to write to the plugin data file. */

@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Applied the same HTTPS and loopback validation to model discovery before any credential-bearing request.
+- Prevented model-authored Markdown from loading remote images or embedded resources automatically; remote URLs are restored only as explicit click links.
+- Reduced structured JSON, SSE, and network errors to persistence-safe summaries at the common provider-error boundary.
+- Pinned every privileged GitHub Pages action to a reviewed immutable commit.
+
 ## 1.0.1 — 2026-08-09
 
 - Reissued the public history after an adversarial scan found a deliberately invalid credential-bearing URL in a rejection test; no real credential was present.

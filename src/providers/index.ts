@@ -6,7 +6,6 @@ import { buildAnthropicBody, handleAnthropicData } from "./anthropic";
 import {
   ProviderError,
   parseExtraHeaders,
-  sanitizeProviderErrorText,
   statusHint,
   type ChatStreamRequest,
   type ProviderProfile,
@@ -64,20 +63,7 @@ export function buildRequestBody(
 }
 
 function parseErrorBody(bodyText: string | undefined): string {
-  if (!bodyText) return "";
-  try {
-    const json = JSON.parse(bodyText) as Record<string, unknown>;
-    const error = json.error;
-    if (typeof error === "string") return error;
-    if (error && typeof error === "object") {
-      const message = (error as Record<string, unknown>).message;
-      if (typeof message === "string") return message;
-    }
-    if (typeof json.message === "string") return json.message;
-  } catch {
-    /* not JSON */
-  }
-  return sanitizeProviderErrorText(bodyText);
+  return bodyText?.trim() ? "上游返回了错误详情（内容已隐藏）" : "";
 }
 
 export function validateProfile(profile: ProviderProfile): void {
@@ -220,6 +206,7 @@ export async function testConnection(
 
 /** Fetch available model ids (GET /models, supported by all three protocols). */
 export async function listModels(profile: ProviderProfile): Promise<string[]> {
+  validateProfile(profile);
   const url = resolveModelsEndpoint(profile);
   const response = await getJson({ url, headers: buildHeaders(profile) });
   if (!response.ok) {

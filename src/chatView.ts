@@ -11,6 +11,10 @@ import type { ContextInventory } from "./contextInventory";
 import { EFFORT_LABELS, EFFORT_ORDER, type ReasoningEffort } from "./providers/types";
 import { rankAtSuggestions, rankTagSuggestions } from "./suggestionRank";
 import { formatStreamingMarkdownPreview } from "./streamingMarkdown";
+import {
+  protectRemoteMarkdownUrls,
+  type ProtectedRemoteUrl,
+} from "./safeMarkdown";
 import { UI_THEME_OPTIONS, type UiTheme } from "./uiTheme";
 import {
   shouldAutoScrollOnUpdate,
@@ -18,6 +22,67 @@ import {
 } from "./scrollPolicy";
 
 export const AI_CHAT_VIEW_TYPE = "ai-chat-panel";
+
+function matchingRemoteUrl(value: string | null, remoteUrls: ProtectedRemoteUrl[]) {
+  if (!value) return undefined;
+  return remoteUrls.find(({ token }) => value.includes(token));
+}
+
+function externalLink(url: string, label = "外部资源（点击打开）"): HTMLAnchorElement {
+  const link = createEl("a");
+  link.href = url;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.textContent = label;
+  return link;
+}
+
+/** Restore protected remote URLs as click-only links after Markdown rendering. */
+function restoreRemoteLinks(container: HTMLElement, remoteUrls: ProtectedRemoteUrl[]): void {
+  if (!remoteUrls.length) return;
+
+  for (const element of Array.from(
+    container.querySelectorAll("img,video,audio,source,iframe,object,embed"),
+  )) {
+    const match = ["src", "srcset", "poster", "data"]
+      .map((name) => matchingRemoteUrl(element.getAttribute(name), remoteUrls))
+      .find(Boolean);
+    if (match) element.replaceWith(externalLink(match.url));
+  }
+
+  for (const link of Array.from(container.querySelectorAll("a[href]"))) {
+    const match = matchingRemoteUrl(link.getAttribute("href"), remoteUrls);
+    if (!match) continue;
+    link.setAttribute("href", match.url);
+    link.setAttribute("target", "_blank");
+    link.setAttribute("rel", "noopener noreferrer");
+  }
+
+  const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
+  const textNodes: Text[] = [];
+  while (walker.nextNode()) {
+    const node = walker.currentNode as Text;
+    if (node.parentElement?.closest("a")) continue;
+    if (remoteUrls.some(({ token }) => node.data.includes(token))) textNodes.push(node);
+  }
+  for (const node of textNodes) {
+    const pattern = new RegExp(
+      remoteUrls.map(({ token }) => token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|"),
+      "g",
+    );
+    const fragment = createFragment();
+    let cursor = 0;
+    for (const match of node.data.matchAll(pattern)) {
+      const index = match.index ?? 0;
+      fragment.append(node.data.slice(cursor, index));
+      const remote = remoteUrls.find(({ token }) => token === match[0]);
+      if (remote) fragment.append(externalLink(remote.url, remote.url));
+      cursor = index + match[0].length;
+    }
+    fragment.append(node.data.slice(cursor));
+    node.replaceWith(fragment);
+  }
+}
 
 type SuggestionKind = "tag" | "prompt";
 interface ContextSuggestion {
@@ -1191,7 +1256,10 @@ export class ChatPanelView extends ItemView {
     const textEl = body.createDiv({ cls: "aichat-message-text" });
     if (message.role === "assistant" && message.status !== "streaming") {
       if (message.text.trim()) {
-        void MarkdownRenderer.render(this.app, message.text, textEl, "", this);
+        const protectedMarkdown = protectRemoteMarkdownUrls(message.text);
+        void MarkdownRenderer.render(this.app, protectedMarkdown.markdown, textEl, "", this).then(
+          () => restoreRemoteLinks(textEl, protectedMarkdown.remoteUrls),
+        );
       } else if (message.status === "cancelled") {
         textEl.setText("（已停止，尚未生成内容）");
       }
