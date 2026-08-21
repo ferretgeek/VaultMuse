@@ -2,10 +2,10 @@
 
 ## 安装插件（本地）
 
-1. 从 [Releases](https://github.com/ferretgeek/VaultMuse/releases) 下载同一版本的 `main.js`、`manifest.json`、`styles.css`。
+1. 从 [Releases](https://github.com/ferretgeek/obsidian-ai-writer/releases) 下载同一版本的 `main.js`、`manifest.json`、`styles.css`。
 2. 新建 `<Vault>/.obsidian/plugins/vault-muse/`，放入这三个文件。
-3. 重启 Obsidian，在“设置 → 社区插件”启用 VaultMuse。
-4. 在 VaultMuse 设置添加模型。远程接口使用 HTTPS；本地 Ollama 可用 `http://127.0.0.1:11434/v1`。
+3. 重启 Obsidian，在“设置 → 社区插件”中启用本插件。
+4. 在插件设置里添加模型。远程接口使用 HTTPS；本地 Ollama 可用 `http://127.0.0.1:11434/v1`。
 
 插件运行于桌面 Obsidian，不是 Web 服务，因此无需也不应部署到公网服务器。若希望在服务器展示界面，只部署下面的**无网络、合成数据演示页**。
 
@@ -47,4 +47,4 @@ npm run build
 - 写入提案失败：确认目标是 Vault 内允许的相对路径，且不是 `.obsidian`、`.trash` 或越界路径。
 - 演示页健康：静态首页和图标返回成功即可；它没有 API、模型请求、插件状态或用户数据，不能用于验证真实插件功能。
 - 卸载：先在 Obsidian 禁用插件并退出，再删除 `.obsidian/plugins/vault-muse/`。这会删除 `data.json` 中的对话/设置，但不会回滚已确认写入的笔记或自动删除 Vault 附件；按备份决定另行处理。
-- 服务器只需停止并删除合成演示页/容器。不存在可部署的 VaultMuse 服务端、同步端或 AI 中继；把演示页上线不等于服务器版产品。
+- 服务器只需停止并删除合成演示页/容器。不存在可部署的服务端、同步端或 AI 中继；把演示页上线不等于服务器版产品。

@@ -1,50 +1,77 @@
 <div align="center">
 
-# VaultMuse / 卷语 — Obsidian AI Chat & Writing
+# Obsidian AI writer
 
-**A quiet, transparent AI companion between your notes and your next thought.**
+[中文](./README.md) · English
 
-[![CI](https://github.com/ferretgeek/VaultMuse/actions/workflows/ci.yml/badge.svg)](https://github.com/ferretgeek/VaultMuse/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/ferretgeek/VaultMuse/actions/workflows/codeql.yml/badge.svg)](https://github.com/ferretgeek/VaultMuse/actions/workflows/codeql.yml)
+[![CI](https://github.com/ferretgeek/obsidian-ai-writer/actions/workflows/ci.yml/badge.svg)](https://github.com/ferretgeek/obsidian-ai-writer/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/ferretgeek/obsidian-ai-writer/actions/workflows/codeql.yml/badge.svg)](https://github.com/ferretgeek/obsidian-ai-writer/actions/workflows/codeql.yml)
 [![MIT](https://img.shields.io/badge/license-MIT-3f8268.svg)](./LICENSE)
 [![Obsidian](https://img.shields.io/badge/Obsidian-1.8.7%2B-7c5ce7.svg)](https://obsidian.md/)
 
-[简体中文](./README.md) · [Privacy](./docs/PRIVACY.md) · [Install & deploy](./docs/DEPLOYMENT_EN.md) · [Live demo](https://ferretgeek.github.io/VaultMuse/)
+[Live demo](https://ferretgeek.github.io/obsidian-ai-writer/) · [Privacy](./docs/PRIVACY.md) · [Installation](./docs/DEPLOYMENT.md)
 
 </div>
 
-![VaultMuse interface preview](./docs/images/dashboard.png)
+![Interface preview](./docs/images/dashboard.png)
 
-VaultMuse is a desktop Obsidian AI conversation plugin. It reads only the notes, tags, selections, or images you explicitly attach. An answer becomes a reviewable proposal before it can change your vault.
+> Chat with a model over the notes *you* picked. Whatever it wants to change, you see first.
 
-## At a glance
+## Why this exists
 
-- **Visible context** — inspect and remove every item used for the current turn; no whole-vault crawl.
-- **Guarded writing** — insert, append, replace, create, and multi-file diffs require confirmation and offer undo.
-- **Provider freedom** — OpenAI Responses, OpenAI-compatible Chat Completions, Anthropic Messages, and local Ollama.
-- **Sensitive by default** — API keys and custom headers stay memory-only unless you opt in; remote endpoints require HTTPS and unsafe headers are rejected.
-- **A complete workspace** — streaming, collapsible reasoning, images, searchable/pinned/exportable history, slash workflows, and prompt-cache-aware requests.
-- **Four global themes** — Sky, Jade, Sunset, and Graphite; persisted from the top-right picker, with Graphite fixed at `#17191d`.
+Most AI note plugins do two things that make them hard to trust.
 
-## Install
+**They read your whole vault.** You wanted to talk about today's meeting note, and three years of journals, financial tables, and private lists went along as context.
 
-Download `main.js`, `manifest.json`, and `styles.css` from [Releases](https://github.com/ferretgeek/VaultMuse/releases), then place them in:
+**They edit your files directly.** You asked it to tidy up a paragraph and came back to a rewritten note with no diff to review.
+
+This plugin inverts both.
+
+**You choose the context.** These notes, this tag, this selection, this image — every item is listed beside the conversation and can be removed at any time. **It never scans the vault.**
+
+**Write-back has a gate.** Insert, append, overwrite, create, and multi-file edits all show a diff first and only land after you confirm. Mistakes are undoable, and deletions go to Obsidian's trash rather than being destroyed.
+
+## What it does
+
+- **Transparent context** — everything used this turn is visible and removable, item by item.
+- **Gated write-back** — insert, append, overwrite, create, and multi-file diffs all require confirmation, and mistakes are undoable.
+- **Bring your own endpoint** — OpenAI Responses, any OpenAI-compatible Chat Completions API, Anthropic Messages, or a local Ollama.
+- **Restrained with secrets** — API keys and custom headers stay in memory by default, remote endpoints are forced to HTTPS, and dangerous headers are rejected.
+- **A complete workbench** — streaming replies, collapsible reasoning, image understanding, searchable / pinned / exportable history, slash workflows, and prompt caching.
+- **Four global themes** — Azure, Emerald, Sunset, and deep gray, switchable from the top right and persisted, with the dark background fixed at `#17191d`.
+
+## Installation
+
+Download `main.js`, `manifest.json`, and `styles.css` from [Releases](https://github.com/ferretgeek/obsidian-ai-writer/releases) into:
 
 ```text
-<your Vault>/.obsidian/plugins/vault-muse/
+<your vault>/.obsidian/plugins/vault-muse/
 ```
 
-Restart Obsidian, enable **VaultMuse** under Community plugins, and add a model profile. Keep “Store sensitive settings locally” disabled unless you accept plaintext-at-rest storage. See [installation and deployment](./docs/DEPLOYMENT_EN.md).
+Restart Obsidian and enable the plugin under Settings → Community plugins, then add a model configuration.
 
-## Security boundary
+> **Leave "store sensitive settings locally" off** if you can — that keeps API keys in memory only, re-entered after an Obsidian restart. Turning it on is a reasonable convenience trade, as long as you know it means the key is written into the vault's plugin data.
 
-- Chat never edits files by itself; only an explicitly confirmed action writes.
-- Traversal, absolute paths, `.trash`, and the vault configuration directory are blocked.
-- Deletions use Obsidian's trash instead of permanent removal.
-- Conversations and settings live in the current vault's plugin data and can be cleared from Advanced settings.
-- VaultMuse does not proxy or conceal model traffic. Your selected provider receives the content you explicitly send.
+Full steps in [installation and deployment](./docs/DEPLOYMENT.md).
 
-Read [privacy and data flow](./docs/PRIVACY.md) and the [security policy](./SECURITY.md) before use.
+## Worth noting technically
+
+**Write paths are allowlisted.** Path traversal, absolute paths, `.trash`, and the vault config directory are all blocked. A plugin that can be talked into writing to `.obsidian/` can rewrite every setting you have.
+
+**API keys and custom headers stay in memory by default.** Remote endpoints are forced to HTTPS, and headers usable for request smuggling or privilege escalation are rejected rather than forwarded verbatim.
+
+**Deletions only go to trash.** Nothing is permanently destroyed — the cost of one bad model call shouldn't be an unrecoverable note.
+
+**The four protocols are implemented separately.** OpenAI Responses, OpenAI-compatible Chat Completions, Anthropic Messages, and Ollama each have their own request and stream-parsing paths rather than being forced through one "compatibility layer," so each provider's reasoning, caching, and image semantics map correctly.
+
+**`npm run check` is a real gate.** It runs ESLint, 55 pure-logic tests, strict type checking, and a production build in sequence. The build emits a local `main.js` only; it copies into a test vault solely when the developer explicitly sets `VAULT_MUSE_DEPLOY_DIR` — so running the tests never touches your real vault.
+
+## What it doesn't do
+
+- Chatting alone never modifies a file; only actions you confirm are written.
+- It doesn't scan the vault.
+- **It doesn't proxy, host, or hide your model requests.** Whichever provider you choose still receives whatever you deliberately send — no plugin can change that, and saying so plainly matters more than being vague about it.
+- Conversations and settings live in the current vault's plugin data and can be cleared in one action from advanced settings.
 
 ## Development
 
@@ -54,8 +81,12 @@ npm run check
 npm run package:release
 ```
 
-`npm run check` runs ESLint, 55 pure-logic tests, strict type checks, and a production build. Builds stay in the repository by default; files are copied to a test vault only when `VAULT_MUSE_DEPLOY_DIR` is explicitly set.
+## More documentation
 
-## Origin and license
+[Installation and deployment](./docs/DEPLOYMENT_EN.md) · [Architecture](./docs/ARCHITECTURE.md) · [Privacy and data flow](./docs/PRIVACY.md) · [Release audit](./docs/发布审计.md) · [Changelog](./CHANGELOG.md) · [Contributing](./CONTRIBUTING.md) · [Security policy](./SECURITY.md)
 
-VaultMuse is an independent derivative of the MIT-licensed `grok-obsidian` project. Original copyright and provenance are preserved in [NOTICE](./NOTICE.md). Released under the [MIT License](./LICENSE).
+## Provenance and license
+
+This is an independent derivative of the MIT-licensed `grok-obsidian`, retaining the original author's copyright and attribution — see [NOTICE](./NOTICE.md).
+
+Released under the [MIT License](./LICENSE). No affiliation with or endorsement by Obsidian, OpenAI, or Anthropic.

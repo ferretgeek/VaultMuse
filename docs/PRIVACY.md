@@ -2,7 +2,7 @@
 
 ## 中文
 
-VaultMuse 在 Obsidian 桌面端本地运行，不提供中转服务器、遥测、分析或远程前端资源。
+本插件在 Obsidian 桌面端本地运行，不提供中转服务器、遥测、分析或远程前端资源。
 
 | 数据 | 去向 | 默认持久化 |
 |---|---|---|
@@ -18,8 +18,8 @@ VaultMuse 在 Obsidian 桌面端本地运行，不提供中转服务器、遥测
 
 ## English
 
-VaultMuse runs locally inside desktop Obsidian. It has no relay server, telemetry, analytics, or remote frontend assets.
+The plugin runs locally inside desktop Obsidian. It has no relay server, telemetry, analytics, or remote frontend assets.
 
 Only explicitly selected notes, expanded tags, selections, images, prompts, and conversation history are sent to the configured model endpoint. API keys and custom headers remain in memory by default; opting into local storage writes them as plaintext to the vault's plugin `data.json`. Conversations and ordinary settings are local and can be cleared in one action. Screenshot attachments use the current vault and recoverable trash.
 
-VaultMuse never indexes the whole vault in the background. Per-turn file and character limits are enforced, remote endpoints require HTTPS, and loopback HTTP remains available for local models. Remote resources in model Markdown never load automatically; external URLs are restored only as click links. Provider JSON, SSE, and network errors are reduced to safe summaries before display or persistence. Your chosen model provider may still retain explicitly sent content under its own policy.
+The plugin never indexes the whole vault in the background. Per-turn file and character limits are enforced, remote endpoints require HTTPS, and loopback HTTP remains available for local models. Remote resources in model Markdown never load automatically; external URLs are restored only as click links. Provider JSON, SSE, and network errors are reduced to safe summaries before display or persistence. Your chosen model provider may still retain explicitly sent content under its own policy.

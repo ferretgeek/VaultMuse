@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
   - name: Private security report
-    url: https://github.com/ferretgeek/VaultMuse/security/advisories/new
+    url: https://github.com/ferretgeek/obsidian-ai-writer/security/advisories/new
     about: Report credential exposure or another security issue privately.

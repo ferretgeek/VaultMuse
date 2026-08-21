@@ -1,4 +1,4 @@
-# VaultMuse project rules
+# Obsidian AI writer — project rules
 
 - Read the workspace root `README.md`, this file, and both project READMEs before changes.
 - Preserve the product boundary: desktop Obsidian only; explicit per-turn context; confirm-before-write; recoverable trash; no whole-vault crawling, background indexing, telemetry, remote assets, credential collection, or hidden proxy.

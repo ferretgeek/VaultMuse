@@ -2,9 +2,9 @@
 
 ## Install the plugin locally
 
-1. Download matching `main.js`, `manifest.json`, and `styles.css` files from [Releases](https://github.com/ferretgeek/VaultMuse/releases).
+1. Download matching `main.js`, `manifest.json`, and `styles.css` files from [Releases](https://github.com/ferretgeek/obsidian-ai-writer/releases).
 2. Create `<Vault>/.obsidian/plugins/vault-muse/` and place all three files inside.
-3. Restart Obsidian and enable VaultMuse under Community plugins.
+3. Restart Obsidian and enable the plugin under Community plugins.
 4. Add a model profile. Use HTTPS remotely; local Ollama may use `http://127.0.0.1:11434/v1`.
 
 The plugin runs inside desktop Obsidian and is not a web service. Do not expose it as a public server. For portfolio hosting, deploy only the synthetic, no-network demo below.
@@ -42,4 +42,4 @@ Settings and conversations live in `<Vault>/.obsidian/plugins/vault-muse/data.js
 - Rejected edits usually indicate a forbidden config/trash path, an absolute path, or traversal outside the vault.
 - The hosted demo is healthy when its static page and icons load. It has no API, model calls, plugin state, or user data and cannot validate real plugin behavior.
 - To uninstall, disable the plugin, exit Obsidian, and remove `.obsidian/plugins/vault-muse/`. This removes settings/history but does not undo confirmed note edits or automatically delete vault attachments.
-- Server removal only stops/deletes the synthetic demo. There is no deployable VaultMuse backend, sync service, or AI relay; hosting the demo is not a server edition.
+- Server removal only stops/deletes the synthetic demo. There is no deployable backend, sync service, or AI relay; hosting the demo is not a server edition.
